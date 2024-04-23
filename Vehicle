@@ -1,0 +1,81 @@
+abstract interface Vehicle{
+    void changeGear(int a);
+    void speedUp(int a);
+    void applyBrakes(int a);
+        
+}
+class Bicycle implements Vehicle{
+    int speed;
+    int gear;
+    public void changeGear(int newGear){
+        gear = newGear;
+    }
+    public void speedUp(int increment){
+        speed = speed + increment;
+    }
+    public void applyBrakes(int decrement){
+        speed = speed - decrement;
+    }
+    public void printStates(){
+        System.out.println("speed: " + speed + " gear: " + gear);
+    }
+}
+
+class Car implements Vehicle{
+    int speed;
+    int gear;
+    public void changeGear(int newGear){
+        gear = newGear;
+    }
+    public void speedUp(int increment){
+        speed = speed + increment;
+    }
+    public void applyBrakes(int decrement){
+        speed = speed - decrement;
+    }
+    public void printStates(){
+        System.out.println("speed: " + speed + " gear: " + gear);
+    }
+}
+
+class Bike implements Vehicle{
+    int speed;
+    int gear;
+    public void changeGear(int newGear){
+        gear = newGear;
+    }
+    public void speedUp(int increment){
+        speed = speed + increment;
+    }
+    public void applyBrakes(int decrement){
+        speed = speed - decrement;
+    }
+    public void printStates(){
+        System.out.println("speed: " + speed + " gear: " + gear);
+    }
+    
+
+}
+public class assignment {
+    public static void main(String[] args){
+        Bicycle B = new Bicycle();
+        B.changeGear(2);
+        B.speedUp(30);
+        B.applyBrakes(10);
+        B.printStates();
+
+        Car C = new Car();
+        C.changeGear(1);
+        C.speedUp(50);
+        C.applyBrakes(20);
+        C.printStates();
+
+        Bike Bk = new Bike();
+        Bk.changeGear(3);
+        Bk.speedUp(40);
+        Bk.applyBrakes(10);
+        Bk.printStates();
+        
+
+    }
+}
