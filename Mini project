@@ -1,0 +1,356 @@
+import java.io.*;
+import java.util.*;
+
+// Interface for Medicine Management
+interface MedicineManager {
+    // Method to add a new medicine
+    void addMedicine(String name, int price, int quantity);
+    // Method to display all medicines
+    void displayMedicines();
+    // Method to delete a medicine by name
+    void deleteMedicine(String name);
+    // Method to update details of a medicine
+    void updateMedicine(String name, int price, int quantity);
+}
+
+// Class representing a Tablet
+class Medicine {
+    String name;
+    int price;
+    int quantity;
+
+    // Constructor
+    Medicine(String name, int price, int quantity) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    // toString method to format medicine details
+    public String toString() {
+        return "Name: " + name + ", Price: " + price + ", Quantity: " + quantity;
+    }
+}
+
+// Class representing a User
+abstract class User {
+    abstract void addToCart(String medicineName, int quantity);
+    abstract void removeFromCart(String medicineName);
+    abstract void viewCart();
+}
+
+// Class representing an Admin
+class Admin extends User {
+    MedicineManager medicineManager;
+
+    Admin(MedicineManager medicineManager) {
+        this.medicineManager = medicineManager;
+    }
+
+    @Override
+    void addToCart(String medicineName, int quantity) {
+        System.out.println("Admin cannot add items to cart.");
+    }
+
+    @Override
+    void removeFromCart(String medicineName) {
+        System.out.println("Admin cannot remove items from cart.");
+    }
+
+    @Override
+    void viewCart() {
+        System.out.println("Admin does not have a cart.");
+    }
+}
+
+// Class representing a Customer
+class Customer extends User {
+    ArrayList<String> cart;
+
+    Customer() {
+        cart = new ArrayList<>();
+    }
+
+    @Override
+    void addToCart(String medicineName, int quantity) {
+        // Adding medicine to cart
+        for (int i = 0; i < quantity; i++) {
+            cart.add(medicineName);
+        }
+        System.out.println(quantity + " " + medicineName + "(s) added to cart.");
+    }
+
+    @Override
+    void removeFromCart(String medicineName) {
+        // Removing medicine from cart
+        if (cart.contains(medicineName)) {
+            cart.remove(medicineName);
+            System.out.println(medicineName + " removed from cart.");
+        } else {
+            System.out.println("Item not found in cart.");
+        }
+    }
+
+    @Override
+    void viewCart() {
+        System.out.println("Cart:");
+        for (String item : cart) {
+            System.out.println(item);
+        }
+    }
+}
+
+public class Medicine_Management implements MedicineManager {
+    private ArrayList<Medicine> medicines;
+    private final String fileName = "medicines.txt";
+
+    // Constructor
+    public Medicine_Management() {
+        medicines = new ArrayList<>();
+        // Load medicines from file when the program starts
+        loadMedicinesFromFile();
+    }
+
+    // Implementing methods from MedicineManager interface
+    @Override
+    // Add medicine method with parameters
+    public void addMedicine(String name, int price, int quantity) {
+        Medicine medicine = new Medicine(name, price, quantity);
+        medicines.add(medicine);
+        // Update file after adding medicine
+        updateFile();
+    }
+
+    @Override
+    // Display medicines method
+    public void displayMedicines() {
+        System.out.println("Tablets:");
+        for (Medicine medicine : medicines) {
+            System.out.println(medicine);
+        }
+    }
+
+    @Override
+    // Delete medicine method
+    public void deleteMedicine(String name) {
+        Iterator<Medicine> iterator = medicines.iterator();
+        while (iterator.hasNext()) {
+            Medicine medicine = iterator.next();
+            if (medicine.name.equalsIgnoreCase(name)) {
+                iterator.remove();
+                System.out.println(name + " deleted successfully.");
+                // Update file after deleting medicine
+                updateFile();
+                return;
+            }
+        }
+        System.out.println("Medicine with name " + name + " not found.");
+    }
+
+    @Override
+    // Update medicine method with parameters
+    public void updateMedicine(String name, int price, int quantity) {
+        for (Medicine medicine : medicines) {
+            if (medicine.name.equalsIgnoreCase(name)) {
+                medicine.price = price;
+                medicine.quantity = quantity;
+                System.out.println(name + " updated successfully.");
+                // Update file after updating medicine
+                updateFile();
+                return;
+            }
+        }
+        System.out.println("Medicine with name " + name + " not found.");
+    }
+
+    // Method for loading medicines data from a text file
+    private void loadMedicinesFromFile() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String name = parts[0];
+                int price = Integer.parseInt(parts[1]);
+                int quantity = Integer.parseInt(parts[2]);
+                addMedicine(name, price, quantity); // Using addMedicine method to load data
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading medicines data: " + e.getMessage());
+        }
+    }
+
+    // Method for updating the text file with current medicines data
+    private void updateFile() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+            for (Medicine medicine : medicines) {
+                writer.println(medicine.name + "," + medicine.price + "," + medicine.quantity);
+            }
+            System.out.println("Medicines data updated successfully.");
+        } catch (IOException e) {
+            System.out.println("Error updating medicines data: " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Medicine_Management medicineManagement = new Medicine_Management();
+
+        while (true) { // Main loop
+            System.out.println("Are you an Admin or a Customer?");
+            System.out.println("1. Admin");
+            System.out.println("2. Customer");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            String userTypeChoice = scanner.nextLine(); // Change to nextLine()
+
+            switch (userTypeChoice.toLowerCase()) { // Convert input to lowercase for case-insensitive comparison
+                case "1": // Admin
+                case "admin": // Admin
+                    System.out.println("Welcome, Admin!");
+                    // Admin functionality
+                    adminFunctionality(scanner, medicineManagement);
+                    break;
+                case "2": // Customer
+                case "customer": // Customer
+                    System.out.println("Welcome, Customer!");
+                    // Customer functionality
+                    customerFunctionality(scanner, medicineManagement);
+                    break;
+                case "3": // Exit program
+                    System.out.println("Exiting...");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice.");
+                    break;
+            }
+        }
+    }
+
+    // Admin functionality
+    private static void adminFunctionality(Scanner scanner, Medicine_Management medicineManagement) {
+        while (true) {
+            System.out.println("\nOptions:");
+            System.out.println("1. Add Medicine");
+            System.out.println("2. Delete Medicine");
+            System.out.println("3. Update Medicine");
+            System.out.println("4. Display Medicines");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter medicine name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter price: ");
+                    int price = scanner.nextInt();
+                    System.out.print("Enter quantity: ");
+                    int quantity = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    medicineManagement.addMedicine(name, price, quantity);
+                    break;
+                case 2:
+                    System.out.print("Enter medicine name to delete: ");
+                    String nameToDelete = scanner.nextLine();
+                    medicineManagement.deleteMedicine(nameToDelete);
+                    break;
+                case 3:
+                    System.out.print("Enter medicine name to update: ");
+                    String nameToUpdate = scanner.nextLine();
+                    System.out.print("Enter new price: ");
+                    int newPrice = scanner.nextInt();
+                    System.out.print("Enter new quantity: ");
+                    int newQuantity = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    medicineManagement.updateMedicine(nameToUpdate, newPrice, newQuantity);
+                    break;
+                case 4:
+                    medicineManagement.displayMedicines();
+                    break;
+                case 5:
+                    System.out.println("Exiting admin panel...");
+                    return; // Exit admin functionality and return to main menu
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    // Customer functionality
+    private static void customerFunctionality(Scanner scanner, Medicine_Management medicineManagement) {
+        Customer customer = new Customer();
+
+        while (true) {
+            System.out.println("\nOptions:");
+            System.out.println("1. View Available Medicines");
+            System.out.println("2. Add to Cart");
+            System.out.println("3. Remove from Cart");
+            System.out.println("4. View Cart");
+            System.out.println("5. Buy");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    // Display available medicines
+                    medicineManagement.displayMedicines();
+                    break;
+                case 2:
+                    System.out.print("Enter medicine name to add to cart: ");
+                    String addToCartName = scanner.nextLine();
+                    System.out.print("Enter quantity: ");
+                    int addToCartQuantity = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    customer.addToCart(addToCartName, addToCartQuantity);
+                    break;
+                case 3:
+                    System.out.print("Enter medicine name to remove from cart: ");
+                    String removeFromCartName = scanner.nextLine();
+                    customer.removeFromCart(removeFromCartName);
+                    break;
+                case 4:
+                    customer.viewCart();
+                    break;
+                case 5:
+                    // Buy medicines in the cart
+                    buyMedicines(scanner, customer, medicineManagement);
+                    break;
+                case 6:
+                    System.out.println("Exiting customer panel...");
+                    return; // Exit customer functionality and return to main menu
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    // Method for buying medicines
+    // Method for buying medicines
+    private static void buyMedicines(Scanner scanner, Customer customer, Medicine_Management medicineManagement) {
+        // Displaying cart items
+        customer.viewCart();
+
+        // Iterate through the cart items
+        for (String item : customer.cart) {
+            // Find the corresponding medicine in the program's memory
+            for (Medicine medicine : medicineManagement.medicines) {
+                if (medicine.name.equalsIgnoreCase(item)) {
+                    // Reduce the quantity of the medicine in the program's memory
+                    medicine.quantity--;
+                    break;
+                }
+            }
+        }
+
+        // Update the file with the new quantities
+        medicineManagement.updateFile();
+
+        // Clear the customer's cart after purchase
+        customer.cart.clear();
+        System.out.println("Medicines bought successfully.");
+    }
+
+}
