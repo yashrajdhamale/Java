@@ -1,44 +1,33 @@
 import java.util.Scanner;
 
-public class Student {
-    static class StudentArray {
-        int rollno;
-        String name;
+class Students {
+    String Name;
+    double PRN;
+}
 
-        public StudentArray(int rollno, String name) {
-            this.rollno = rollno;
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return "Roll No: " + rollno + ", Name: " + name;
-        }
-    }
-
+public class Assignment2 {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
+        Students[] arr = new Students[5]; // Create an array to hold 5 Students objects
 
-        System.out.print("Enter the number of students: ");
-        int n = sc.nextInt();
+        for (int i = 0; i < 5; i++) {
+            arr[i] = new Students(); // Instantiate each Students object
 
-        StudentArray[] students = new StudentArray[n]; // Array of Student objects
+            System.out.println("Enter the Name of Student " + (i + 1) + ":");
+            String name = scanner.nextLine();
+            System.out.println("Enter the PRN of Student " + (i + 1) + ":");
+            double prn = scanner.nextDouble();
+            scanner.nextLine(); // Consume the newline left-over
 
-        // Input student details
-        for (int i = 0; i < n; i++) {
-            System.out.print("Enter roll no for student " + (i + 1) + ": ");
-            int rollno = sc.nextInt();
-            System.out.print("Enter name for student " + (i + 1) + ": ");
-            String name = sc.next();
-            students[i] = new StudentArray(rollno, name);
+            arr[i].Name = name;
+            arr[i].PRN = prn;
         }
 
-        // Display student details
-        System.out.println("Student Details:");
-        for (int i = 0; i < n; i++) {
-            System.out.println(students[i]);
+        for (int j = 0; j < 5; j++) {
+            System.out.println("Name of Student " + (j + 1) + " is " + arr[j].Name);
+            System.out.println("PRN of Student " + (j + 1) + " is " + arr[j].PRN);
         }
 
-        sc.close();
+        scanner.close(); // Close the scanner to prevent resource leak
     }
 }
