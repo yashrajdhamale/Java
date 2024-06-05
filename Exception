@@ -1,0 +1,35 @@
+import java.util.Scanner;
+
+
+public class Assignment8 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        float[] arr = new float[2];
+
+        float num1;
+        float num2;
+
+        System.out.print("Enter the Number 1:");
+        num1 = scanner.nextFloat();
+        arr[0] = num1;
+        System.out.print("Enter the Number 2:");
+        num2 = scanner.nextFloat();
+        arr[1] = num2;
+        try {
+            System.out.println("The division of the two numbers is: " + (num1 / num2));
+        } catch (ArithmeticException e) {
+            System.out.println("Arithmetic Exception: Division by zero is not possible.");
+        } catch (NumberFormatException e) {
+            System.out.println("Number Format Exception: Please enter a valid number.");
+        } finally {
+            scanner.close();
+        }
+
+        try {
+            System.out.println("The number enter are " + arr[0] + arr[2]);
+        } catch (ArrayIndexOutOfBoundsException e){
+            System.out.println("Array Index Out Of Bounds Exception " + e);
+        }
+
+    }
+}
