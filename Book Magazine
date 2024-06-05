@@ -1,48 +1,94 @@
-class Publication{
- String titleString;
- double price;
- int copies;
- void saleCopy(int n){
- copies -= n;
- }
- public Publication(String titleString, double price, int copies){
- this.titleString = titleString;
- this.price = price;
- this.copies = copies;
- }
+class Publication {
+    String title;
+    float price;
+    int copies;
+    int sales;
+
+    Publication(String title, float price, int copies) {
+        this.title = title;
+        this.price = price;
+        this.copies = copies;
+        this.sales = 0;
+    }
+
+    void saleCopy(int n) {
+        if (n <= copies) {
+            copies -= n;
+            sales += n;
+        } else {
+            System.out.println("Not enough copies available to sell.");
+        }
+    }
+
+    float getTotalSales() {
+        return sales * price;
+    }
+
+    void display() {
+        System.out.println("Title: " + title);
+        System.out.println("Price: " + price);
+        System.out.println("Copies available: " + copies);
+        System.out.println("Total copies sold: " + sales);
+        System.out.println("Total sales: " + getTotalSales());
+    }
 }
-class Book extends Publication{
- String author;
- void orderCopies(int n){
- copies += n;
- }
- public Book(String titleString, double price, int copies, String author){
- super(titleString, price, copies);
- this.author = author;
- }
+
+class Book extends Publication {
+    String author;
+    Book(String title, float price, int copies, String author) {
+        super(title, price, copies);
+        this.author = author;
+    }
+
+    void orderCopies(int n) {
+        copies += n;
+    }
+
+    @Override
+    void display() {
+        super.display();
+        System.out.println("Author: " + author);
+    }
 }
-class Magazine extends Publication{
- int orderQty;
- int currentIssue;
- void receiveIssue(){
- System.out.println("Received issue: " + currentIssue);
- currentIssue++;
- }
- public Magazine(String titleString, double price, int copies, int orderQty, int 
-currentIssue){
- super(titleString, price, copies);
- this.orderQty = orderQty;
- this.currentIssue = currentIssue;
- }
+
+class Magazine extends Publication {
+    int orderQty;
+    int currentIssue;
+
+    Magazine(String title, float price, int copies, int orderQty, int currentIssue) {
+        super(title, price, copies);
+        this.orderQty = orderQty;
+        this.currentIssue = currentIssue;
+    }
+
+    void receiveIssue() {
+        currentIssue++;
+    }
+
+    @Override
+    void display() {
+        super.display();
+        System.out.println("Order Quantity: " + orderQty);
+        System.out.println("Current Issue: " + currentIssue);
+    }
 }
-public class Bookclass {
- public static void main(String args[]){
- Book b1 = new Book("Vinay the great!", 100, 100, "Vinay");
- Magazine m1 = new Magazine("Champak", 50, 50, 50, 50);
- b1.orderCopies(10);
- m1.orderQty = 10;
- m1.receiveIssue();
- System.out.println("Total sale of publication: " + (b1.price * b1.copies + 
-m1.price * m1.copies));
- }
+
+public class Assignment4 {
+    public static void main(String[] args) {
+        Book b = new Book("The Alchemist", 500, 20, "Paulo Coelho");
+        b.saleCopy(10);
+        b.display();
+        b.orderCopies(5);
+        System.out.println("After ordering more copies:");
+        b.display();
+
+        System.out.println();
+
+        Magazine m = new Magazine("National Geographic", 100, 24, 3, 20);
+        m.saleCopy(2);
+        m.display();
+        m.receiveIssue();
+        System.out.println("After receiving new issue:");
+        m.display();
+    }
 }
