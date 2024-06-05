@@ -1,78 +1,74 @@
-class Complex {
-    private double real;
-    private double imaginary;
+import java.util.Scanner;
 
-    // Default constructor
-    public Complex() {
-        this.real = 0.0;
-        this.imaginary = 0.0;
+class complex {
+    int real;
+    int imaginary;
+    
+    complex() {
+        this.real = 0;
+        this.imaginary = 0;
+
+        System.out.println("The default complex number is: " + this.real + " + " + this.imaginary + "i");
+    }
+    complex(int r, int i) {
+        this.real = r;
+        this.imaginary = i;
+       
     }
 
-    // Parameterized constructor
-    public Complex(double real, double imaginary) {
-        this.real = real;
-        this.imaginary = imaginary;
+    void addition(complex c) {
+        int sumReal = this.real + c.real;
+        int sumImaginary = this.imaginary + c.imaginary;        
+        System.out.println("The sum of the two complex numbers is: " + sumReal + " + " + sumImaginary + "i");
+        
+    }
+    void substraction(complex c) {
+        int subReal = this.real - c.real;
+        int subImaginary = this.imaginary - c.imaginary;        
+        System.out.println("The substraction of the two complex numbers is: " + subReal + " + " + subImaginary + "i");
+
     }
 
-    // Method to add two complex numbers
-    public Complex add(Complex other) {
-        double realPart = this.real + other.real;
-        double imaginaryPart = this.imaginary + other.imaginary;
-        return new Complex(realPart, imaginaryPart);
+    void multiply(complex c){
+        int mulReal = (this.real * c.real) - (this.imaginary * c.imaginary);
+        int mulImaginary = (this.real * c.imaginary) + (this.imaginary * c.real);
+        System.out.println("The multiplication of the two complex numbers is: " + mulReal + " + " + mulImaginary + "i");
+    
     }
 
-    // Method to subtract two complex numbers
-    public Complex subtract(Complex other) {
-        double realPart = this.real - other.real;
-        double imaginaryPart = this.imaginary - other.imaginary;
-        return new Complex(realPart, imaginaryPart);
+    void division(complex c){
+        int divReal = ((this.real * c.real) + (this.imaginary * c.imaginary)) / ((c.real * c.real) + (c.imaginary * c.imaginary));
+        int divImaginary = ((this.imaginary * c.real) - (this.real * c.imaginary)) / ((c.real * c.real) + (c.imaginary * c.imaginary));
+        System.out.println("The division of the two complex numbers is: " + divReal + " + " + divImaginary + "i");
     }
 
-    // Method to multiply two complex numbers
-    public Complex multiply(Complex other) {
-        double realPart = this.real * other.real - this.imaginary * other.imaginary;
-        double imaginaryPart = this.real * other.imaginary + this.imaginary * other.real;
-        return new Complex(realPart, imaginaryPart);
-    }
-
-    // Method to divide two complex numbers
-    public Complex divide(Complex other) {
-        double denominator = other.real * other.real + other.imaginary * other.imaginary;
-        double realPart = (this.real * other.real + this.imaginary * other.imaginary) / denominator;
-        double imaginaryPart = (this.imaginary * other.real - this.real * other.imaginary) / denominator;
-        return new Complex(realPart, imaginaryPart);
-    }
-
-    // Method to display the complex number
-    public void display() {
-        if (imaginary >= 0) {
-            System.out.println(real + " + " + imaginary + "i");
-        } else {
-            System.out.println(real + " - " + Math.abs(imaginary) + "i");
-        }
-    }
 }
 
-public class C {
+public class Assignment3 {
     public static void main(String[] args) {
-        // Creating two complex numbers
-        Complex num1 = new Complex(2.0, 3.0);
-        Complex num2 = new Complex(1.0, -1.0);
+        Scanner scanner = new Scanner(System.in);
 
-        // Performing arithmetic operations
-        Complex sum = num1.add(num2);
-        Complex difference = num1.subtract(num2);
-        Complex product = num1.multiply(num2);
-        Complex quotient = num1.divide(num2);
+        System.out.print("Enter the real part of the first complex number: ");
+        int r1 = scanner.nextInt();
+        System.out.print("Enter the imaginary part of the first complex number: ");
+        int i1 = scanner.nextInt();
+        
+        System.out.print("Enter the real part of the second complex number: ");
+        int r2 = scanner.nextInt();
+        System.out.print("Enter the imaginary part of the second complex number: ");
+        int i2 = scanner.nextInt();
+        
+        complex c = new complex();
+        complex c1 = new complex(r1, i1);
+        complex c2 = new complex(r2, i2);
 
-        // Displaying results
-        System.out.println("Sum:");
-        sum.display();
-        System.out.println("Difference:");
-        difference.display();
-        System.out.println("Product:");
-        product.display();
-        System.out.println("Quotient:");
-        quotient.display();
+        
+        c1.addition(c2);
+        
+        c1.substraction(c2);
+
+        c1.multiply(c2);
+
+        c1.division(c2);
     }
 }
